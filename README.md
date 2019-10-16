@@ -55,8 +55,9 @@ The output is wrapped by markers:
 and it's my hope that once you've added the above in all the Markdown files to which you want child
 listings I'll be able to recursively traverse a nested folders of git repositories, cleaning out the existing content between the markers and replace with a current version. For the moment I'm content with being able to generate a child-page listing for my existing repos, some of which are filled with a variety of related items.
 
-**TO-DO:** add a command-line switch to include the first paragraph of a child Markdown file into the listing as a teaser.
-
-**TO-DO:** consider making hyperlinks to non-Markdown files optional via command-line switch.
-
-**TO-DO:** add a command-line switch to show only entries which have previously been committed into git, hiding in-progress local feature work.
+| TO-DO CANDIDATES |
+|:--- |
+| Instead of directory-first to files-first. |
+| Add a command-line switch to include the first paragraph of a child Markdown file into the listing as a teaser. |
+| Consider making hyperlinks to non-Markdown files optional via command-line switch.|
+| Add a command-line switch to show only entries which have previously been committed into git, hiding in-progress local feature work. |
