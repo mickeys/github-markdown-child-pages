@@ -2,7 +2,13 @@
 
 ## Problem
 
-Markdown doesn't provide for any sort of child-pages capability to generate any sort of navigatable hierarchy, forcing one to manually create (and, ugh, update) said links over time. (This is really a step down from other page-management systems.) I want something like:
+Markdown doesn't provide for any sort of child-pages capability to generate any sort of navigatable hierarchy, forcing one to manually create (and, ugh, update) said links over time. (This is really a step down from other page-management systems.)
+
+From a file system that looks like this:
+
+![](./directory_structure.png)
+
+I want to show readers something like:
 
 <!-- github-markdown-child-pages-start -->
 &#9122; [github-markdown-child-pages](./README.md)<br>
