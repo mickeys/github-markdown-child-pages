@@ -57,7 +57,6 @@ listings I'll be able to recursively traverse a nested folders of git repositori
 
 | TO-DO CANDIDATES |
 |:--- |
-| Instead of directory-first to files-first. |
 | Add a command-line switch to include the first paragraph of a child Markdown file into the listing as a teaser. |
 | Consider making hyperlinks to non-Markdown files optional via command-line switch.|
 | Add a command-line switch to show only entries which have previously been committed into git, hiding in-progress local feature work. |

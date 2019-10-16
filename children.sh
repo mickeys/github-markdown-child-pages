@@ -10,14 +10,18 @@
 PROJURL='https://github.com/mickeys'
 PROJECT='github-markdown-child-pages'
 EXT='.md'									# Markdown files
-unwanted=" \[$( whoami )\] "				# " [username] "
+#unwanted=" \[$( whoami )\] "				# " [username] "
 
 # -----------------------------------------------------------------------------
 # Read into an array a path listing of all the $EXT files below $1.
+#
+# -f     Prints the full path prefix for each file.
+# -n     Turn colorization off always.
+# --dirsfirst
 # -----------------------------------------------------------------------------
 IFS=$'\n' read -d '' -r -a tree \
-	< <( tree -nufF -I images -P "*$EXT" \
-		--prune -n --noreport --dirsfirst --charset=ascii "${1:-.}" )
+	< <( tree -nf -I images -P "*$EXT" \
+		--prune -n --noreport --charset=ascii "${1:-.}" )
 
 # following obsoleted by --noreport command-line flag
 #numBranches="$((${#path[@]}-1))"			# the last array element
@@ -35,7 +39,7 @@ do
 	# put the parts together.
 	# -------------------------------------------------------------------------
 	branch="${branch//\`/\\}"				#
-	branch="${branch//$unwanted/}"			# remove "[username]" from each line
+#	branch="${branch//$unwanted/}"			# remove "[username]" from each line
  	path="${branch%%-- *}"					# grab left section including `-- `
  	if [ "$path" == "." ]; then continue ; fi # skip the top of the path
  	filepath="${branch##*-- }"				# grab right section after `-- `
