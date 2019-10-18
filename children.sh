@@ -3,27 +3,62 @@
 # github.com/mickeys/github-markdown-child-pages
 #
 # Generate a pretty, relative hierarchical list of child Markdown pages for
-# pasting into documents. Reference at URL above.
+# pasting into documents. Man page and white paper at URL above.
 #
-# Usage: cd directory ; children.sh . # then cut-and-paste into document
+# Usage: cd directory ; children.sh .		# then cut-and-paste into document
 # =============================================================================
-PROJURL='https://github.com/mickeys'
-PROJECT='github-markdown-child-pages'
-EXT='.md'									# Markdown files
+PROJURL='https://github.com/mickeys'		# owner URL
+PROJECT='github-markdown-child-pages'		# pathTo project git repository
+
 #unwanted=" \[$( whoami )\] "				# " [username] "
+PARAMS=''
+ARGS='nf'									# -f (full path), -n (color off)
+MKDN='.md'									# Markdown file extension
+PAT="$MKDN"									# default to Markdown files only
+SHOWALL=''									# default to show only $MKDN
+UNTRACKED=''								# default to show only git tracked
+sp='&nbsp;'									# the most typo'd thing ever
 
 # -----------------------------------------------------------------------------
-# Read into an array a path listing of all the $EXT files below $1.
-#
-# -f     Prints the full path prefix for each file.
-# -n     Turn colorization off always.
-# --dirsfirst
+# Process the command-line arguments passed to us.
 # -----------------------------------------------------------------------------
+while (( "$#" )); do
+	case "$1" in
+		-a|--all-filetypes)
+			SHOWALL='true'
+			ARGS="${ARGS}aF"				# show all, type suffixes
+			PAT='*'							# this pattern will show all
+			shift 1							# 1 for switch, 2 for following arg
+			;;
+		-u|--untracked)
+			UNTRACKED='true'				# show files regardless of git status
+			shift 1							# 1 for switch, 2 for following arg
+			;;
+		--) # end argument parsing
+			shift
+			break
+			;;
+		-*|--*=) # unsupported flags
+			echo "Error: Unsupported flag $1" >&2
+			exit 1
+			;;
+		*) # preserve positional arguments
+			PARAMS="$PARAMS $1"
+			shift
+			;;
+	esac
+done
+eval set -- "$PARAMS"						# positional arguments in their place
+
+# -----------------------------------------------------------------------------
+# Read into an array a path listing of all the $PAT files below $1.
+# -----------------------------------------------------------------------------
+# tree -a -I '.git|.DS_Store' -P '*' .
 IFS=$'\n' read -d '' -r -a tree \
-	< <( tree -nf -I images -P "*$EXT" \
-		--prune -n --noreport --charset=ascii "${1:-.}" )
+	< <( tree -${ARGS} -I '.git|.DS_Store' -P "*$PAT" \
+		--prune --noreport --charset=ascii "${1:-.}" )
 
-# following obsoleted by --noreport command-line flag
+# the following code is obsoleted by --noreport command-line flag
 #numBranches="$((${#path[@]}-1))"			# the last array element
 #unset "tree[$numBranches]"					# remove `path` summary line
 
@@ -41,23 +76,38 @@ do
 	branch="${branch//\`/\\}"				#
 #	branch="${branch//$unwanted/}"			# remove "[username]" from each line
  	path="${branch%%-- *}"					# grab left section including `-- `
- 	if [ "$path" == "." ]; then continue ; fi # skip the top of the path
  	filepath="${branch##*-- }"				# grab right section after `-- `
-#echo "DEBUG branch '$branch'"
-#echo "DEBUG filepath '$filepath'"
+ 	if [ "$path" == '.' ]; then continue ; fi # skip
+
+	# there was a reason I wanted trailing clarifiers but I can't recall now...
+	if [ "${filepath: -1}" == '*' ] ; then filepath="${filepath:0:-1}" ; fi
+
+	# if UNTRACKED then just show it (and don't bother testing its git status)
+	if [ "$UNTRACKED" == '' ]; then
+		gitCmd="git shortlog --summary "$filepath""
+		gitStatus="$( $gitCmd  "$filepath" )"
+		if [ "${gitStatus:0:2}" == '' ]; then continue ; fi # untracked return nothing
+	fi
+
 	# convert ASCII path items to prettier HTML variants
-	path="${path// /&nbsp;}"				# non-collapsing spaces
+	path="${path// /$sp}"				# non-collapsing spaces
 	path="${path//\|/&#9122;}"				# vertical lines
 	path="${path//\\/&#9123;}"				# last item in list marker
 
-	if [ "${filepath:(-${#EXT})}" == "$EXT" ]; then
+#echo "DEBUG $filepath ${filepath:(-${#PAT})} $PAT"
+	if [ "${filepath:(-${#MKDN})}" == "$MKDN" ]; then
 		# ---------------------------------------------------------------------
-		# If $filepath ends with the specified extension ($EXT) then grab the
-		# first line of the file specified to use as a human-readable link part.
+		# If $filepath ends with the specified extension '.md' then grab the
+		# first line of the file to use as a human-readable link part.
 		# ---------------------------------------------------------------------
 		read -r firstline<"$filepath"
 		doctitle="${firstline#* }"
 		branch="$path [$doctitle]($filepath)"
+	elif [ "$SHOWALL" != '' ]; then
+		# ---------------------------------------------------------------------
+		# if we're showing all filetypes provide pathTo the file itself
+		# ---------------------------------------------------------------------
+		branch="$path [$filepath]($filepath)"
 	else
 		# ---------------------------------------------------------------------
 		# Otherwise this line must be a directory element. Grab the leaf name.
