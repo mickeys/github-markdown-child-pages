@@ -10,6 +10,8 @@
 
 Generate a graphical relative representation of the child files and subfolders, providing hyperlinks to certain documents. By default only Markdown documents which are being tracked by `git` are shown, with the Markdown document title as the hyperlink text. Options, below, modify the set of documents shown.
 
+Filtered out of results are the `.git` directory (the working store of the revision management system) and all `.DS_Store` files (used by macOS for housekeeping).
+
 # Options
 
 -a, --all-filetypes
@@ -19,6 +21,8 @@ Generate a graphical relative representation of the child files and subfolders, 
 -u, --untracked
 
 	Provide hyperlinks to files not tracked by git.
+
+These options cannot be combined; `-au` is invalid.
 
 # EXAMPLES
 
@@ -94,12 +98,23 @@ See GitHub Issues: <https://github.com/[owner]/[repo]/issues>
 
 # INSTALLATION
 
-foo
+Move the script to a location on your `$PATH` and ensure it's executable.
+
+```
+mv children.sh /usr/local/bin/children
+chmod +x /usr/local/bin/children
+```
+
+Move the man page to a location on your `$MANPATH`.
+
+```
+mv children.1 /usr/local/share/man/man1/
+```
 
 # AUTHOR
 
 [Michael Sattler](https://github.com/mickeys/)
 
+<!--
 # SEE ALSO
-
-[children.sh](./children.sh) - the Bash script
+-->
