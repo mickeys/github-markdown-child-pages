@@ -115,6 +115,6 @@ mv children.1 /usr/local/share/man/man1/
 
 [Michael Sattler](https://github.com/mickeys/)
 
-<!--
 # SEE ALSO
--->
+
+* [children.sh white-paper](./white-paper.md)
