@@ -117,4 +117,4 @@ mv children.1 /usr/local/share/man/man1/
 
 # SEE ALSO
 
-* [children.sh white-paper](./white-paper.md)
+[children.sh white-paper](./white-paper.md)
