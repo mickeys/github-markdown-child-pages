@@ -6,6 +6,7 @@
 # pasting into documents. Man page and white paper at URL above.
 #
 # Usage: cd directory ; children.sh .		# then cut-and-paste into document
+# Or usage: ./children.sh roles/ > README.md   # output into README.md
 # =============================================================================
 PROJURL='https://github.com/mickeys'		# owner URL
 PROJECT='github-markdown-child-pages'		# pathTo project git repository
@@ -101,7 +102,8 @@ do
 		# first line of the file to use as a human-readable link part.
 		# ---------------------------------------------------------------------
 		read -r firstline<"$filepath"
-		doctitle="${firstline#* }"
+# 		doctitle="${firstline#* }" ## Err \r\n
+		doctitle=$(echo "$doctitle" | tr -s '\r\n' ' ') ## Fix \r\n
 		branch="$path [$doctitle]($filepath)"
 	elif [ "$SHOWALL" != '' ]; then
 		# ---------------------------------------------------------------------
