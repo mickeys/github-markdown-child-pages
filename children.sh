@@ -5,7 +5,7 @@
 # Generate a pretty, relative hierarchical list of child Markdown pages for
 # pasting into documents. Man page and white paper at URL above.
 #
-# Usage: cd directory ; children.sh .		# then cut-and-paste into document
+# Usage: git commit...; cd directory ; children.sh .		# then cut-and-paste into document
 # Or usage: ./children.sh roles/ > README.md   # output into README.md
 # =============================================================================
 PROJURL='https://github.com/mickeys'		# owner URL
